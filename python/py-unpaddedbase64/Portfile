@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-unpaddedbase64
+version             2.1.0
+revision            0
+categories-append   devel
+platforms           darwin
+license             Apache-2
+supported_archs     noarch
+
+python.versions     36 37 38 39
+
+maintainers         {gpanders.com:greg @gpanders} openmaintainer
+
+description         Encode and decode Base64 without "=" padding
+long_description    {*}${description}
+
+checksums           rmd160  4a8a60da9b3619a53bd5a74245e58123702ae7e6 \
+                    sha256  27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804 \
+                    size    102161
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        port:poetry
+}
