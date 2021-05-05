@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-matrix-nio
+version             0.17.0
+checksums           rmd160  cca4c9e92c44eb6a2e89783a9cddafa5ec99ccb9 \
+                    sha256  f7f63ce127980d40f3e6a5fdb87abf17ce1a7c2bd8bf2c7560e1bbce8ab1f92d \
+                    size    1218664
+revision            0
+
+python.versions     36 37 38 39
+
+maintainers         {gpanders.com:greg @gpanders} openmaintainer
+
+platforms           darwin
+license             ISC
+
+description         A Python Matrix client library, designed according to sans I/O \
+                    principles
+
+long_description    nio is a multilayered Matrix client library. The underlying base \
+                    layer doesn't do any network IO on its own, but on top of that is \
+                    a full fledged batteries-included asyncio layer using aiohttp. \
+                    File IO is only done if you enable end-to-end encryption.
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    port:poetry
+
+    depends_run-append \
+                    port:py${python.version}-future \
+                    port:py${python.version}-aiohttp \
+                    port:py${python.version}-aiofiles \
+                    port:py${python.version}-unpaddedbase64 \
+                    port:py${python.version}-h11 \
+                    port:py${python.version}-h2 \
+                    port:py${python.version}-logbook \
+                    port:py${python.version}-jsonschema \
+                    port:py${python.version}-pycryptodome \
+                    port:py${python.version}-aiohttp-socks
+
+    if {${python.version} == 36} {
+        depends_run-append \
+                    port:py${python.version}-dataclasses
+    }
+
+    if {${python.version} != 36} {
+        # py-peewee has no py36 subport
+        variant e2e description {Enable end-to-end encryption} {
+            depends_run-append \
+                        port:py${python.version}-olm \
+                        port:py${python.version}-peewee \
+                        port:py${python.version}-cachetools \
+                        port:py${python.version}-atomicwrites
+        }
+
+        default_variants-append +e2e
+    }
+}
